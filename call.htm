@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <!--
-* Copyright (C) 2012-2016 Doubango Telecom <http://www.doubango.org>
+* Copyright (C) 2012-2018 Doubango Telecom <http://www.doubango.org>
 * License: BSD
 * This file is part of Open Source sipML5 solution <http://www.sipml5.org>
 -->
@@ -18,7 +18,7 @@
     DEBUG VERSION: 'SIPml-api.js'
     RELEASE VERSION: 'release/SIPml-api.js'
     -->
-    <script src="SIPml-api.js?svn=250" type="text/javascript"> </script>
+    <script src="SIPml-api.js?svn=252" type="text/javascript"> </script>
 
     <!-- Styles -->
     <link href="./assets/css/bootstrap.css" rel="stylesheet" />
@@ -125,7 +125,321 @@
             height: 72px;
             margin-top: -42px;
         }
+
+        #top-bar {
+            background-color: whitesmoke;
+            position: relative;
+            left: 460px;
+            height: 70px;
+            width: 60%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        #notification {
+            margin-top: 30px;
+            margin-bottom: auto;
+            position: relative;
+            left: 200px;
+        }
+
+        #notification > div {
+            height: 55px;
+            width: 220px;
+            border-radius: 5px;
+            background-color: red;
+            color: white;
+            display: flex;
+            flex-direction: row;
+            word-wrap: break-word;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
+        }
+
+        #messageQueue {
+            margin-top: auto;
+            margin-bottom: 15px;
+            position: relative;
+            left: 200px;
+        }
+
+        #messageQueue > div {
+            height: 55px;
+            width: 220px;
+            border-radius: 5px;
+            background-color:whitesmoke;
+            color: black;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: row;
+            word-wrap: break-word;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
+        }
+
+        #background {
+            height: 100%;
+            width: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #trigger_button {
+            max-width: 60px;
+        }
+
+        .emoji {
+            background-color: teal;
+            height: 40px;
+            min-width: 40px; 
+            margin: 10px;
+        }
+
+        .decline {
+            width: 40px;
+            height: 40px;
+            margin: 15px 20px auto 15px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+
+        }
+
+        .accept {
+            width: 40px;
+            height: 40px;
+            margin: 15px 0px auto auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        h2 {
+            margin-left: 20px;
+        }
+
+        .hang-up {
+            width: 120px;
+            height: 40px;
+            margin: 15px 20px auto auto;
+            background-color: red;
+        }
+
+        @import url('https://fonts.googleapis.com/css?family=Poppins');
+
+        /* BASIC */
+
+        body {
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        }
+
+        
+
+        .wrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column; 
+        justify-content: center;
+        width: 100%;
+        min-height: 100%;
+        padding: 20px;
+        background-color: #56baed;
+        }
+
+        #formContent {
+        -webkit-border-radius: 10px 10px 10px 10px;
+        border-radius: 10px 10px 10px 10px;
+        background: #fff;
+        padding: 60px;
+        width: 90%;
+        max-width: 450px;
+        position: relative;
+        -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        text-align: center;
+        }
+
+    
+
+        input[type=button], input[type=submit], input[type=reset]  {
+        background-color: #56baed;
+        border: none;
+        color: white;
+        padding: 15px 80px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        text-transform: uppercase;
+        font-size: 13px;
+        -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+        box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+        margin: 5px 20px 0px 20px;
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        -ms-transition: all 0.3s ease-in-out;
+        -o-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        }
+
+        input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+        background-color: #39ace7;
+        }
+
+        input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
+        -moz-transform: scale(0.95);
+        -webkit-transform: scale(0.95);
+        -o-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        transform: scale(0.95);
+        }
+
+        input[type=text] {
+        background-color: #f6f6f6;
+        border: none;
+        color: #0d0d0d;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 5px;
+        width: 85%;
+        border: 2px solid #f6f6f6;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+        }
+
+        input[type=text]:focus {
+        background-color: #fff;
+        border-bottom: 2px solid #5fbae9;
+        }
+
+        input[type=text]:placeholder {
+        color: #cccccc;
+        }
+
+
+
+        /* ANIMATIONS */
+
+        /* Simple CSS3 Fade-in-down Animation */
+        .fadeInDown {
+        -webkit-animation-name: fadeInDown;
+        animation-name: fadeInDown;
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        }
+
+        @-webkit-keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0, -100%, 0);
+            transform: translate3d(0, -100%, 0);
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none;
+        }
+        }
+
+        @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0, -100%, 0);
+            transform: translate3d(0, -100%, 0);
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none;
+        }
+        }
+
+        /* Simple CSS3 Fade-in Animation */
+        @-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+        .fadeIn {
+        opacity:0;
+        -webkit-animation:fadeIn ease-in 1;
+        -moz-animation:fadeIn ease-in 1;
+        animation:fadeIn ease-in 1;
+
+        -webkit-animation-fill-mode:forwards;
+        -moz-animation-fill-mode:forwards;
+        animation-fill-mode:forwards;
+
+        -webkit-animation-duration:1s;
+        -moz-animation-duration:1s;
+        animation-duration:1s;
+        }
+
+        .fadeIn.first {
+        -webkit-animation-delay: 0.4s;
+        -moz-animation-delay: 0.4s;
+        animation-delay: 0.4s;
+        }
+
+        .fadeIn.second {
+        -webkit-animation-delay: 0.6s;
+        -moz-animation-delay: 0.6s;
+        animation-delay: 0.6s;
+        }
+
+        .fadeIn.third {
+        -webkit-animation-delay: 0.8s;
+        -moz-animation-delay: 0.8s;
+        animation-delay: 0.8s;
+        }
+
+        .fadeIn.fourth {
+        -webkit-animation-delay: 1s;
+        -moz-animation-delay: 1s;
+        animation-delay: 1s;
+        }
+
+        /* Simple CSS3 Fade-in Animation */
+        .underlineHover:after {
+        display: block;
+        left: 0;
+        bottom: -10px;
+        width: 0;
+        height: 2px;
+        background-color: #56baed;
+        content: "";
+        transition: width 0.2s;
+        }
+
+        .underlineHover:hover {
+        color: #0d0d0d;
+        }
+
+        .underlineHover:hover:after{
+        width: 100%;
+        }
+
+        *:focus {
+            outline: none;
+        } 
+
+        * {
+        box-sizing: border-box;
+        }
     </style>
+
     <link href="./assets/css/bootstrap-responsive.css" rel="stylesheet" />
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="./assets/ico/favicon.ico" />
@@ -377,12 +691,15 @@
                 SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') == "true") ? "error" : "info");
 
                 // create SIP stack
+                const identity_input = document.getElementById("identity_input").value
+                const password_input = document.getElementById("password_input").value
                 oSipStack = new SIPml.Stack({
-                    realm: txtRealm.value,
-                    impi: txtPrivateIdentity.value,
-                    impu: txtPublicIdentity.value,
-                    password: txtPassword.value,
-                    display_name: txtDisplayName.value,
+                    
+                    realm: "192.168.8.15",
+                    impi: identity_input,
+                    impu: "sip:" + identity_input + "@" + "192.168.8.15",
+                    password: password_input,
+                    display_name: identity_input.value,
                     websocket_proxy_url: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.websocket_server_url') : null),
                     outbound_proxy_url: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.sip_outboundproxy_url') : null),
                     ice_servers: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.ice_servers') : null),
@@ -449,7 +766,7 @@
                     btnCall.disabled = false;
                     btnHangUp.disabled = true;
                     return;
-                }
+                } 
                 saveCallOptions();
             }
             else if (oSipSessionCall) {
@@ -1101,6 +1418,10 @@
             }
         }
 
+        
+
+
+
     </script>
 </head>
 <body style="cursor:wait">
@@ -1214,7 +1535,7 @@
                 <table style='width: 100%;'>
                     <tr>
                         <td style="white-space:nowrap;">
-                            <input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" />
+                            
                         </td>
                     </tr>
                     <tr>
@@ -1223,11 +1544,9 @@
                                 <!--div class="btn-group">
                                     <input type="button" id="btnBFCP" style="margin: 0; vertical-align:middle; height: 100%;" class="btn btn-primary" value="BFCP" onclick='sipShareScreen();' disabled />
                                 </div-->
-                                <div id="divBtnCallGroup" class="btn-group">
-                                    <button id="btnCall" disabled class="btn btn-primary" data-toggle="dropdown">Call</button>
-                                </div>&nbsp;&nbsp;
+                                
                                 <div class="btn-group">
-                                    <input type="button" id="btnHangUp" style="margin: 0; vertical-align:middle; height: 100%;" class="btn btn-primary" value="HangUp" onclick='sipHangUp();' disabled />
+                                    
                                 </div>
                             </div>
                         </td>
@@ -1265,13 +1584,7 @@
                     </tr>
                     <tr>
                         <td align='center'>
-                            <div id='divCallOptions' class='call-options' style='opacity: 0; margin-top: 0px'>
-                                <input type="button" class="btn" style="" id="btnFullScreen" value="FullScreen" disabled onclick='toggleFullScreen();' /> &nbsp;
-                                <input type="button" class="btn" style="" id="btnMute" value="Mute" onclick='sipToggleMute();' /> &nbsp;
-                                <input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick='sipToggleHoldResume();' /> &nbsp;
-                                <input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick='sipTransfer();' /> &nbsp;
-                                <input type="button" class="btn" style="" id="btnKeyPad" value="KeyPad" onclick='openKeyPad();' />
-                            </div>
+                            
                         </td>
                     </tr>
                 </table>
@@ -1282,7 +1595,7 @@
         <footer>
 
             <p>
-                &copy; Doubango Telecom 2012-2016 <br />
+                &copy; Doubango Telecom 2012-2018 <br />
                 <i>Inspiring the future</i>
             </p>
             <!-- Creates all ATL/COM objects right now
@@ -1323,6 +1636,114 @@
         <li><a href="#" onclick='uiDisableCallOptions();'><b>Disable these options</b></a></li>
     </ul>
 
+    
+    <div id="background">
+        <button id="trigger_button">trigger</button>
+        <div id="top-bar"></div>
+        <div id="notification"></div>
+        
+        
+        <div id="messageQueue"></div>
+    </div>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <label style="width: 100%;" align="center" id="txtRegStatus">
+            </label>
+            <form>
+                <input type="text" id="identity_input" class="fadeIn second" name="identity" placeholder="identity">
+                <input type="text" id="password_input" class="fadeIn third" name="password" placeholder="password">
+                <input type="button" class="fadeIn fourth" id="btnRegister" value="LogIn" disabled onclick='sipRegister();'>
+            </form>
+        </div>
+    </div>
+    <input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" />
+    <div id="divBtnCallGroup" class="btn-group">
+        <button id="btnCall" disabled class="btn btn-primary" data-toggle="dropdown">Call</button><div id='divCallOptions' class='call-options' style='opacity: 1; margin-top: 0px'></div>
+    </div>&nbsp;&nbsp;
+    
+    <h2>+601123456789 is calling in... </h2><button class='accept'></button><button class='decline'></button>
+    <h2>+601123456789 is on the line <b>1:23</b></h2><input type="button" id="btnHangUp" class="btn btn-primary" value="HangUp" onclick='sipHangUp();' disabled />
+    <script>
+        async function triggerNotification1(message) {
+            var l = {
+                0:"<div class='emoji'></div>Customer is agitated. Show some empathy",
+                1:"<div class='emoji'></div>You are speaking too slow. Speak faster",
+                2:"<div class='emoji'></div>Customer is happy, build rapport",
+                3:"<div class='emoji'></div>Your energy is too low. Raise your energy",
+                4:"<div class='emoji'></div>You are interrupting the customer.",
+                5:"<div class='emoji'></div>emotion5",
+            }
+            message = l[Math.floor(Math.random() * 6)];
+            triggerNotification(message);
+        }
+
+        // const trigger_button = document.getElementById("trigger_button");
+        // console.log(trigger_button)
+        trigger_button.addEventListener("click",() => {triggerNotification1("test")});
+
+
+        // declare as global variables
+        var messageQueueList = [];
+        var toSkipAppend = 0;
+
+        // function takes in an emotion as string eg: "happy"
+        async function triggerNotification(message) {
+            // get element in document that displays the message
+            const currentMessage = document.getElementById("notification");
+
+            // check if it is already displaying a message, if so, append the previous message to the queue and increment skip counter
+            if (currentMessage.innerHTML) {
+                appendToQueue(currentMessage.innerHTML.slice(5,-6));
+                toSkipAppend += 1;
+            }
+
+            // display current message
+            currentMessage.innerHTML = "<div>" + message + "</div>";
+
+            // sleep it for 3 seconds before appending to queue
+            await sleep();
+
+            // toSkipAppend >= 1 means this message has already been appended to queue so skip this message
+            if (toSkipAppend >= 1) {
+                console.log(1);
+                toSkipAppend -= 1;
+            } else {
+                console.log(2);
+                appendToQueue(message);
+                currentMessage.innerHTML = "";
+            }
+            
+            
+        }
+
+        // this function appends the current message to the queue to display the previous five messages
+        async function appendToQueue(message) {
+            
+            messageQueueList.push(message.slice());
+
+            // ensures the queue only disply the last five message 
+            if (messageQueueList.length > 5) {
+                messageQueueList.shift();
+            }
+
+            // add messagess to the messageQueue element in document
+            var divs = ""
+            for (m of messageQueueList.reverse()) {
+                divs += "<div>" + m + "</div>";
+            }
+            messageQueueList.reverse()
+            const messageQueue = document.getElementById("messageQueue");
+            messageQueue.innerHTML = divs;
+        }
+
+        async function sleep() {
+            return new Promise((resolve) => {
+                setTimeout(resolve, 3000);
+            });
+        }
+
+        
+    </script>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -1358,6 +1779,5 @@
             pageTracker._trackPageview();
         } catch (err) { }
     </script>
-
 </body>
 </html>

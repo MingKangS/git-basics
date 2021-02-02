@@ -1,0 +1,18 @@
+<div id="background">
+    <button id="trigger_button">trigger</button>
+    <div id="top-bar">
+        <h2>+601123456789 is calling in... </h2><button class='accept'></button><button class='decline'></button>
+        <h2>+601123456789 is on the line <b>1:23</b></h2><input type="button" id="btnHangUp" class="btn btn-primary" value="HangUp" onclick='sipHangUp();' disabled />
+        <input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" />
+        <div id="divBtnCallGroup" class="btn-group">
+            <button id="btnCall" disabled class="btn btn-primary" data-toggle="dropdown">Call</button><div id='divCallOptions' class='call-options' style='opacity: 1; margin-top: 0px'></div>
+        </div>&nbsp;&nbsp;
+    </div>
+    <div id="notification"></div>
+    
+    
+    <div id="messageQueue"></div>
+</div>
+
+
+
