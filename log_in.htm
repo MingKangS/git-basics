@@ -1,13 +1,20 @@
 <html>
+    <script src="SIPml-api.js?svn=252" type="text/javascript"> </script>
+    <script src="log_in/init_log_in.js" type="text/javascript"> </script>
+    <link rel="stylesheet" href="log_in/log_in.css">
     <div class="wrapper fadeInDown">
+        <label style="width: 100%;" align="center" id="txtRegStatus">
+        </label>
         <div id="formContent">
             <label style="width: 100%;" align="center" id="txtRegStatus">
             </label>
             <form>
-                <input type="text" id="identity_input" class="fadeIn second" name="identity" placeholder="identity">
-                <input type="text" id="password_input" class="fadeIn third" name="password" placeholder="password">
-                <input type="button" class="fadeIn fourth" id="btnRegister" value="LogIn" disabled onclick='sipRegister();'>
+                <input type="text" id="txtPrivateIdentity" value="" class="fadeIn second" name="identity" placeholder="identity">
+                <input type="text" id="txtPassword" value="" class="fadeIn third" name="password" placeholder="password">
+                <input type="button" class="fadeIn fourth" id="btnRegister" value="LogIn" onclick='sipRegister();'>
+                <input type="button" class="btn btn-danger" id="btnUnRegister" value="LogOut" disabled onclick='sipUnRegister();' />
             </form>
         </div>
     </div>
+    
 </html>

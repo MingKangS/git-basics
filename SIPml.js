@@ -11,7 +11,7 @@
 @author      Doubango Telecom <http://www.doubango.org>
 @version     2.1.4
 */
-
+console.log(123)
 /** 
 @namespace
 @description Root namesapce.
