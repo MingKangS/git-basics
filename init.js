@@ -303,7 +303,9 @@ var sTransferNumber;
                 // create call session
                 oSipSessionCall = oSipStack.newSession(s_type, oConfigCall);
                 // make call
+                changeState("on a call")
                 if (oSipSessionCall.call(txtPhoneNumber.value) != 0) {
+                    changeState("")
                     oSipSessionCall = null;
                     txtCallStatus.value = 'Failed to make call';
                     btnCall.disabled = false;

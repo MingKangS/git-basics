@@ -15,6 +15,9 @@ var sTransferNumber;
         };
 
         window.onload = function () {
+            changeState("")
+
+            window.localStorage.setItem('org.doubango.expert.disable_callbtn_options', 'true');
             window.console && window.console.info && window.console.info("location=" + window.location);
 
             videoLocal = document.getElementById("video_local");
@@ -71,6 +74,8 @@ var sTransferNumber;
                 //var rinningApps = SIPml.getRunningApps();
                 //var _rinningApps = Base64.decode(rinningApps);
                 //tsk_utils_log_info(_rinningApps);
+                console.log(12341)
+                sipRegister()
             }
 
             oReadyStateTimer = setInterval(function () {
@@ -139,7 +144,6 @@ var sTransferNumber;
                 }
             }
 
-            btnRegister.disabled = false;
             document.body.style.cursor = 'default';
             oConfigCall = {
                 audio_remote: audioRemote,
@@ -154,8 +158,36 @@ var sTransferNumber;
                                 { name: 'language', value: '\"en,fr\"' }
                 ]
             };
+
+            
         }
 
+        function changeState(callState) {
+            const top = document.getElementById("top-bar");
+
+            switch(callState) {
+                case "on a call":
+                    top.innerHTML = '<h2 id="h2">+601123456789 is on the line <b>1:23</b></h2><input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick="sipToggleHoldResume();" /><input type="button" id="btnHangUp" class="btn btn-primary hang-up" value="Hang up" onclick="sipHangUp();" disabled />'
+                    
+                    break;
+                case "incoming call":
+                    top.innerHTML = '<h2 id="h2"> is calling in... </h2><button id="btnCall" class="accept" ></button><button id="btnHangUp" class="btn btn-primary reject" value="Hang up" onclick="sipHangUp();" disabled></button>'
+                    break;
+                default:
+                    top.innerHTML = '<input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" /><div id="divBtnCallGroup" class="btn-group"><button id="btnCall" disabled class="btn btn-primary btnCall" onclick="sipCall(\'call-audio\');">Call</button><div id="divCallOptions" class="call-options" style="opacity: 1; margin-top: 0px"></div></div>&nbsp;&nbsp;<div id="divCallOptions" class="call-options" style="opacity: 0; margin-top: 0px"><input type="button" class="btn" style="" id="btnFullScreen" value="FullScreen" disabled onclick="toggleFullScreen();" /> &nbsp;<input type="button" class="btn" style="" id="btnMute" value="Mute" onclick="sipToggleMute();" /> &nbsp; &nbsp;<input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /> &nbsp;<input type="button" class="btn" style="" id="btnKeyPad" value="KeyPad" onclick="openKeyPad();" /></div><label style="width: 100%;" align="center" id="txtCallStatus"></label>'
+              }
+              console.log(document.getElementById("btnCall"), document.getElementById("btnHangUp"),1)
+              btnCall = document.getElementById("btnCall")
+              btnHangUp = document.getElementById("btnHangUp")
+              btnHoldResume = document.getElementById("btnHoldResume")
+              console.log(btnCall, btnHangUp, 1)
+              if (btnCall) {
+                  btnCall.disabled = false
+              }
+              if (btnHangUp) {
+                btnHangUp.disabled = false
+            }
+        }
 
         function loadCallOptions() {
             if (window.localStorage) {
@@ -163,7 +195,7 @@ var sTransferNumber;
                 if ((s_value = window.localStorage.getItem('org.doubango.call.phone_number'))) txtPhoneNumber.value = s_value;
                 bDisableVideo = (window.localStorage.getItem('org.doubango.expert.disable_video') == "true");
 
-                txtCallStatus.innerHTML = '<i>Video ' + (bDisableVideo ? 'disabled' : 'enabled') + '</i>';
+                //txtCallStatus.innerHTML = '<i>Video ' + (bDisableVideo ? 'disabled' : 'enabled') + '</i>';
             }
         }
 
@@ -178,11 +210,6 @@ var sTransferNumber;
             if (window.localStorage) {
                 // IE retuns 'null' if not defined
                 var s_value;
-                if ((s_value = window.localStorage.getItem('org.doubango.identity.display_name'))) txtDisplayName.value = s_value;
-                if ((s_value = window.localStorage.getItem('org.doubango.identity.impi'))) txtPrivateIdentity.value = s_value;
-                if ((s_value = window.localStorage.getItem('org.doubango.identity.impu'))) txtPublicIdentity.value = s_value;
-                if ((s_value = window.localStorage.getItem('org.doubango.identity.password'))) txtPassword.value = s_value;
-                if ((s_value = window.localStorage.getItem('org.doubango.identity.realm'))) txtRealm.value = s_value;
             }
             else {
                 //txtDisplayName.value = "005";
@@ -208,40 +235,46 @@ var sTransferNumber;
         function sipRegister() {
             // catch exception for IE (DOM not ready)
             try {
-                btnRegister.disabled = true;
-                if (!txtRealm.value || !txtPrivateIdentity.value || !txtPublicIdentity.value) {
-                    txtRegStatus.innerHTML = '<b>Please fill madatory fields (*)</b>';
-                    btnRegister.disabled = false;
+                const txtPrivateIdentity = window.localStorage.getItem('org.doubango.identity.impi');
+                const txtPassword = window.localStorage.getItem('org.doubango.identity.password');
+                console.log(1)
+                //btnRegister.disabled = true;
+                console.log(txtPrivateIdentity)
+                if (!txtPrivateIdentity) {
+                    //txtRegStatus.innerHTML = '<b>Please fill madatory fields (*)</b>';
+                    //btnRegister.disabled = false;
                     return;
                 }
-                var o_impu = tsip_uri.prototype.Parse(txtPublicIdentity.value);
+                console.log(2)
+                
+                var o_impu = tsip_uri.prototype.Parse("sip:" + txtPrivateIdentity + "@" + "192.168.8.15");
+                console.log(o_impu)
                 if (!o_impu || !o_impu.s_user_name || !o_impu.s_host) {
-                    txtRegStatus.innerHTML = "<b>[" + txtPublicIdentity.value + "] is not a valid Public identity</b>";
-                    btnRegister.disabled = false;
+                    //txtRegStatus.innerHTML = "<b>[" + "sip:" + txtPrivateIdentity.value + "@" + "192.168.8.15" + "] is not a valid Public identity</b>";
+                    //btnRegister.disabled = false;
                     return;
                 }
-
+                
                 // enable notifications if not already done
                 if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
                     window.webkitNotifications.requestPermission();
                 }
-
+                console.log(3)
                 // save credentials
-                saveCredentials();
-
+                //saveCredentials();
+                console.log(2)
                 // update debug level to be sure new values will be used if the user haven't updated the page
                 SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') == "true") ? "error" : "info");
 
                 // create SIP stack
-                const identity_input = document.getElementById("identity_input").value
-                const password_input = document.getElementById("password_input").value
+                
                 oSipStack = new SIPml.Stack({
                     
                     realm: "192.168.8.15",
-                    impi: identity_input,
-                    impu: "sip:" + identity_input + "@" + "192.168.8.15",
-                    password: password_input,
-                    display_name: identity_input.value,
+                    impi: txtPrivateIdentity,
+                    impu: "sip:" + txtPrivateIdentity + "@" + "192.168.8.15",
+                    password: txtPassword,
+                    display_name: txtPrivateIdentity,
                     websocket_proxy_url: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.websocket_server_url') : null),
                     outbound_proxy_url: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.sip_outboundproxy_url') : null),
                     ice_servers: (window.localStorage ? window.localStorage.getItem('org.doubango.expert.ice_servers') : null),
@@ -256,16 +289,23 @@ var sTransferNumber;
                             { name: 'Organization', value: 'Doubango Telecom' }
                     ]
                 }
+                
                 );
+                console.log(oSipStack)
                 if (oSipStack.start() != 0) {
-                    txtRegStatus.innerHTML = '<b>Failed to start the SIP stack</b>';
+                    console.log("sip start fail")
+                    //txtRegStatus.innerHTML = '<b>Failed to start the SIP stack</b>';
                 }
-                else return;
+                else {
+                    console.log("yay")
+                    return;
+                }
             }
             catch (e) {
-                txtRegStatus.innerHTML = "<b>2:" + e + "</b>";
+                //txtRegStatus.innerHTML = "<b>2:" + e + "</b>";
+                console.log("e")
             }
-            btnRegister.disabled = false;
+            //btnRegister.disabled = false;
         }
 
         // sends SIP REGISTER (expires=0) to logout
@@ -278,7 +318,15 @@ var sTransferNumber;
         // makes a call (SIP INVITE)
         function sipCall(s_type) {
             console.log("call func")
-            if (oSipStack && !oSipSessionCall && !tsk_string_is_null_or_empty(txtPhoneNumber.value)) {
+            
+            
+            //console.log(oSipStack,!oSipSessionCall,!tsk_string_is_null_or_empty(txtPhoneNumber.value))
+            
+            if (oSipSessionCall) {
+                console.log("2")
+                txtCallStatus.innerHTML = '<i>Connecting...</i>';
+                oSipSessionCall.accept(oConfigCall);
+            }else if (oSipStack && !oSipSessionCall && !tsk_string_is_null_or_empty(txtPhoneNumber.value)) {
                 console.log("1")
                 if (s_type == 'call-screenshare') {
                     if (!SIPml.isScreenShareSupported()) {
@@ -294,7 +342,7 @@ var sTransferNumber;
                     }
                 }
                 btnCall.disabled = true;
-                btnHangUp.disabled = false;
+                //btnHangUp.disabled = false;
 
                 if (window.localStorage) {
                     oConfigCall.bandwidth = tsk_string_to_object(window.localStorage.getItem('org.doubango.expert.bandwidth')); // already defined at stack-level but redifined to use latest values
@@ -304,7 +352,12 @@ var sTransferNumber;
                 // create call session
                 oSipSessionCall = oSipStack.newSession(s_type, oConfigCall);
                 // make call
-                if (oSipSessionCall.call(txtPhoneNumber.value) != 0) {
+                console.log(txtPhoneNumber.value)
+                //txtPhoneNumber.value = 110196
+                const phoneNumber = txtPhoneNumber.value
+                changeState("on a call")
+                if (oSipSessionCall.call(phoneNumber) != 0) {
+                    changeState("")
                     oSipSessionCall = null;
                     txtCallStatus.value = 'Failed to make call';
                     btnCall.disabled = false;
@@ -312,11 +365,6 @@ var sTransferNumber;
                     return;
                 } 
                 saveCallOptions();
-            }
-            else if (oSipSessionCall) {
-                console.log("2")
-                txtCallStatus.innerHTML = '<i>Connecting...</i>';
-                oSipSessionCall.accept(oConfigCall);
             }
             console.log("call func end")
         }
@@ -374,7 +422,9 @@ var sTransferNumber;
                 var i_ret;
                 btnHoldResume.disabled = true;
                 txtCallStatus.innerHTML = oSipSessionCall.bHeld ? '<i>Resuming the call...</i>' : '<i>Holding the call...</i>';
+                console.log("toggle")
                 i_ret = oSipSessionCall.bHeld ? oSipSessionCall.resume() : oSipSessionCall.hold();
+                console.log(i_ret)
                 if (i_ret != 0) {
                     txtCallStatus.innerHTML = '<i>Hold / Resume failed</i>';
                     btnHoldResume.disabled = false;
@@ -402,7 +452,8 @@ var sTransferNumber;
         // terminates the call (SIP BYE or CANCEL)
         function sipHangUp() {
             if (oSipSessionCall) {
-                txtCallStatus.innerHTML = '<i>Terminating the call...</i>';
+                console.log("hangup")
+                //txtCallStatus.innerHTML = '<i>Terminating the call...</i>';
                 oSipSessionCall.hangup({ events_listener: { events: '*', listener: onSipEventSession } });
             }
         }
@@ -561,27 +612,27 @@ var sTransferNumber;
                     {
                         var bDisableCallBtnOptions = (window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_callbtn_options') == "true");
                         btnCall.value = btnCall.innerHTML = bDisableCallBtnOptions ? 'Call' : 'Call <span id="spanCaret" class="caret">';
-                        btnCall.setAttribute("class", bDisableCallBtnOptions ? "btn btn-primary" : "btn btn-primary dropdown-toggle");
+                        //btnCall.setAttribute("class", bDisableCallBtnOptions ? "btn btn-primary" : "btn btn-primary dropdown-toggle");
                         btnCall.onclick = bDisableCallBtnOptions ? function () { sipCall(bDisableVideo ? 'call-audio' : 'call-audiovideo'); } : null;
-                        ulCallOptions.style.visibility = bDisableCallBtnOptions ? "hidden" : "visible";
-                        if (!bDisableCallBtnOptions && ulCallOptions.parentNode != divBtnCallGroup) {
+                        //ulCallOptions.style.visibility = bDisableCallBtnOptions ? "hidden" : "visible";
+                        /*if (!bDisableCallBtnOptions && ulCallOptions.parentNode != divBtnCallGroup) {
                             divBtnCallGroup.appendChild(ulCallOptions);
                         }
                         else if (bDisableCallBtnOptions && ulCallOptions.parentNode == divBtnCallGroup) {
                             document.body.appendChild(ulCallOptions);
-                        }
+                        }*/
 
                         break;
                     }
                 default:
                     {
                         btnCall.value = btnCall.innerHTML = s_text;
-                        btnCall.setAttribute("class", "btn btn-primary");
+                        //.setAttribute("class", "btn btn-primary");
                         btnCall.onclick = function () { sipCall(bDisableVideo ? 'call-audio' : 'call-audiovideo'); };
-                        ulCallOptions.style.visibility = "hidden";
+                        /*ulCallOptions.style.visibility = "hidden";
                         if (ulCallOptions.parentNode == divBtnCallGroup) {
                             document.body.appendChild(ulCallOptions);
-                        }
+                        }*/
                         break;
                     }
             }
@@ -589,11 +640,14 @@ var sTransferNumber;
 
         function uiCallTerminated(s_description) {
             uiBtnCallSetText("Call");
-            btnHangUp.value = 'HangUp';
+            if (btnHangUp) {
+                btnHangUp.value = 'Hang up';
+                btnHangUp.disabled = true;
+            }
             btnHoldResume.value = 'hold';
             btnMute.value = "Mute";
             btnCall.disabled = false;
-            btnHangUp.disabled = true;
+            
             if (window.btnBFCP) window.btnBFCP.disabled = true;
 
             oSipSessionCall = null;
@@ -649,7 +703,7 @@ var sTransferNumber;
                         oSipStack = null;
                         oSipSessionRegister = null;
                         oSipSessionCall = null;
-
+                        console.log("q1")
                         uiOnConnectionEvent(false, false);
 
                         stopRingbackTone();
@@ -670,20 +724,31 @@ var sTransferNumber;
                             e.newSession.hangup(); // comment this line for multi-line support
                         }
                         else {
+                            
+
+                            console.log("change state i call")
+                            changeState("incoming call");
                             oSipSessionCall = e.newSession;
                             // start listening for events
                             oSipSessionCall.setConfiguration(oConfigCall);
 
-                            uiBtnCallSetText('Answer');
-                            btnHangUp.value = 'Reject';
-                            btnCall.disabled = false;
-                            btnHangUp.disabled = false;
-
+                            
                             startRingTone();
 
                             var sRemoteNumber = (oSipSessionCall.getRemoteFriendlyName() || 'unknown');
                             txtCallStatus.innerHTML = "<i>Incoming call from [<b>" + sRemoteNumber + "</b>]</i>";
                             showNotifICall(sRemoteNumber);
+
+                            
+                            const h2 = document.getElementById("h2")
+                            h2.innerHTML = sRemoteNumber + ' is calling in... '
+                            
+
+                            uiBtnCallSetText("");
+                            btnHangUp.value = 'Reject';
+                            btnCall.disabled = false;
+                            btnHangUp.disabled = false;
+
                         }
                         break;
                     }
@@ -696,7 +761,7 @@ var sTransferNumber;
                 case 'm_permission_accepted':
                 case 'm_permission_refused':
                     {
-                        divGlassPanel.style.visibility = 'hidden';
+                        //divGlassPanel.style.visibility = 'hidden';
                         if (e.type == 'm_permission_refused') {
                             uiCallTerminated('Media stream permission denied');
                         }
@@ -706,6 +771,20 @@ var sTransferNumber;
                 case 'starting': default: break;
             }
         };
+        async function timeKeeper() {
+            const b = document.getElementById("b")
+            var time = b.innerHTML
+            var min = parseInt(time.slice(0,-3))
+            var sec = time.slice(-2,-1) == "0" ? parseInt(time.slice(-1)) : parseInt(time.slice(-2))
+            sec += 1
+            if (sec == 60) {
+                min += 1
+                sec = 0
+            }
+            sec = sec < 10 ? "0" + sec.toString() : sec.toString()
+            b.innerHTML = min.toString() + ":" + sec
+            console.log(b,time,min,sec)
+        }
 
         // Callback function for SIP sessions (INVITE, REGISTER, MESSAGE...)
         function onSipEventSession(e /* SIPml.Session.Event */) {
@@ -716,14 +795,22 @@ var sTransferNumber;
                     {
                         var bConnected = (e.type == 'connected');
                         if (e.session == oSipSessionRegister) {
+                            console.log("q2")
                             uiOnConnectionEvent(bConnected, !bConnected);
                             txtRegStatus.innerHTML = "<i>" + e.description + "</i>";
                         }
                         else if (e.session == oSipSessionCall) {
-                            btnHangUp.value = 'HangUp';
-                            btnCall.disabled = true;
+                            console.log("case: connected", e.type)
+                            changeState("on a call")
+                            var sRemoteNumber = (oSipSessionCall.getRemoteFriendlyName() || 'unknown');
+                            const h2 = document.getElementById("h2")
+                            h2.innerHTML = sRemoteNumber + ' is on the line <b id="b">0:00</b>'
+                            window.localStorage.setItem('timer', setInterval(function () { timeKeeper() },1000));
+                            //var timer = setInterval(function () { timeKeeper() },1000)
+                            btnHangUp.value = 'Hang up';
+                            //btnCall.disabled = true;
                             btnHangUp.disabled = false;
-                            btnTransfer.disabled = false;
+                            //btnTransfer.disabled = false;
                             if (window.btnBFCP) window.btnBFCP.disabled = false;
 
                             if (bConnected) {
@@ -737,7 +824,7 @@ var sTransferNumber;
                             }
 
                             txtCallStatus.innerHTML = "<i>" + e.description + "</i>";
-                            divCallOptions.style.opacity = bConnected ? 1 : 0;
+                            //divCallOptions.style.opacity = bConnected ? 1 : 0;
 
                             if (SIPml.isWebRtc4AllSupported()) { // IE don't provide stream callback
                                 uiVideoDisplayEvent(false, true);
@@ -747,8 +834,14 @@ var sTransferNumber;
                         break;
                     } // 'connecting' | 'connected'
                 case 'terminating': case 'terminated':
-                    {
+                    {   
+                        console.log("_________clear")
+                        clearInterval(window.localStorage.getItem('timer'));
+                        console.log(oSipStack)
+                        changeState("")
+                        console.log("case: terminated", oSipStack)
                         if (e.session == oSipSessionRegister) {
+                            console.log("q3")
                             uiOnConnectionEvent(false, false);
 
                             oSipSessionCall = null;
@@ -853,6 +946,7 @@ var sTransferNumber;
                     }
                 case 'm_local_resume_ok':
                     {
+                        console.log('m_local_resume_ok')
                         if (e.session == oSipSessionCall) {
                             oSipSessionCall.bTransfering = false;
                             btnHoldResume.value = 'Hold';
@@ -869,6 +963,7 @@ var sTransferNumber;
                     }
                 case 'm_local_resume_nok':
                     {
+                        console.log('m_local_resume_nnnnnok')
                         if (e.session == oSipSessionCall) {
                             oSipSessionCall.bTransfering = false;
                             btnHoldResume.disabled = false;

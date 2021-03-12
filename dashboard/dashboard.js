@@ -7,7 +7,7 @@ async function triggerNotification1(message) {
         4:"<div class='emoji'></div>You are interrupting the customer.",
         5:"<div class='emoji'></div>emotion5",
     }
-    message = l[Math.floor(Math.random() * 6)];
+    message = l[Math.floor(Math.random() * 5)];
     triggerNotification(message);
 }
 
