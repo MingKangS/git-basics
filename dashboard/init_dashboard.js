@@ -167,7 +167,7 @@ var sTransferNumber;
 
             switch(callState) {
                 case "on a call":
-                    top.innerHTML = '<h2 id="h2">+601123456789 is on the line <b>1:23</b></h2><input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick="sipToggleHoldResume();" /><input type="button" id="btnHangUp" class="btn btn-primary hang-up" value="Hang up" onclick="sipHangUp();" disabled />'
+                    top.innerHTML = '<input type="range" min="1" max="100" value="50" class="slider" id="mic-volume"><h2 id="h2">+601123456789 is on the line <b>1:23</b></h2><input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /><input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick="sipToggleHoldResume();" /><input type="button" id="btnHangUp" class="btn btn-primary hang-up" value="Hang up" onclick="sipHangUp();" disabled />'
                     
                     break;
                 case "incoming call":
@@ -187,6 +187,65 @@ var sTransferNumber;
               if (btnHangUp) {
                 btnHangUp.disabled = false
             }
+        }
+
+        var inputLevelSelector = document.getElementById('mic-volume');
+
+        // Renamed the variable after your comment.
+        var peerConnection = new RTCPeerConnection({
+            "iceServers": []
+        });
+
+        function gotStream(stream) {
+
+        // Get the videoTracks from the stream.
+        const videoTracks = stream.getVideoTracks();
+
+        /**
+         * Create a new audio context and build a stream source,
+         * stream destination and a gain node. Pass the stream into 
+         * the mediaStreamSource so we can use it in the Web Audio API.
+         */
+        const context = new AudioContext();
+        const mediaStreamSource = context.createMediaStreamSource(stream);
+        const mediaStreamDestination = context.createMediaStreamDestination();
+        const gainNode = context.createGain();
+
+        /**
+         * Connect the stream to the gainNode so that all audio
+         * passes through the gain and can be controlled by it.
+         * Then pass the stream from the gain to the mediaStreamDestination
+         * which can pass it back to the RTC client.
+         */
+        mediaStreamSource.connect(gainNode);
+        gainNode.connect(mediaStreamDestination);
+
+        /**
+         * Change the gain levels on the input selector.
+         */
+        inputLevelSelector.addEventListener('input', event => {
+            gainNode.gain.value = event.target.value;
+        });
+
+        /**
+         * The mediaStreamDestination.stream outputs a MediaStream object
+         * containing a single AudioMediaStreamTrack. Add the video track
+         * to the new stream to rejoin the video with the controlled audio.
+         */
+        const controlledStream = mediaStreamDestination.stream;
+        for (const videoTrack of videoTracks) {
+            controlledStream.addTrack(videoTrack);
+        }
+
+        /**
+         * Use the stream that went through the gainNode. This
+         * is the same stream but with altered input volume levels.
+         */
+        localVideo.srcObject = controlledStream;
+        localStream = controlledStream;
+        peerConnection.addStream(controlledStream);
+        callButton.disabled = false;
+
         }
 
         function loadCallOptions() {
@@ -317,7 +376,7 @@ var sTransferNumber;
 
         // makes a call (SIP INVITE)
         function sipCall(s_type) {
-            console.log("call func")
+            console.log("call func",oSipSessionCall)
             
             
             //console.log(oSipStack,!oSipSessionCall,!tsk_string_is_null_or_empty(txtPhoneNumber.value))
@@ -404,6 +463,7 @@ var sTransferNumber;
         function sipTransfer() {
             if (oSipSessionCall) {
                 var s_destination = prompt('Enter destination number', '');
+                console.log("---------trans ",s_destination)
                 if (!tsk_string_is_null_or_empty(s_destination)) {
                     btnTransfer.disabled = true;
                     if (oSipSessionCall.transfer(s_destination) != 0) {
@@ -412,6 +472,8 @@ var sTransferNumber;
                         return;
                     }
                     txtCallStatus.innerHTML = '<i>Transfering the call...</i>';
+                    oSipSessionCall = false
+                    console.log("osipsessioncall = ", oSipSessionCall)
                 }
             }
         }
@@ -810,7 +872,7 @@ var sTransferNumber;
                             btnHangUp.value = 'Hang up';
                             //btnCall.disabled = true;
                             btnHangUp.disabled = false;
-                            //btnTransfer.disabled = false;
+                            btnTransfer.disabled = false;
                             if (window.btnBFCP) window.btnBFCP.disabled = false;
 
                             if (bConnected) {

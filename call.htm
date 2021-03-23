@@ -453,6 +453,7 @@
                 saveCallOptions();
             }
             else if (oSipSessionCall) {
+                console.log("accept")
                 txtCallStatus.innerHTML = '<i>Connecting...</i>';
                 oSipSessionCall.accept(oConfigCall);
             }
