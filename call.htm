@@ -453,7 +453,6 @@
                 saveCallOptions();
             }
             else if (oSipSessionCall) {
-                console.log("accept")
                 txtCallStatus.innerHTML = '<i>Connecting...</i>';
                 oSipSessionCall.accept(oConfigCall);
             }
@@ -756,7 +755,6 @@
 
         // Callback function for SIP Stacks
         function onSipEventStack(e /*SIPml.Stack.Event*/) {
-            console.log("OSES")
             tsk_utils_log_info('==stack event = ' + e.type);
             switch (e.type) {
                 case 'started':
@@ -764,7 +762,6 @@
                         // catch exception for IE (DOM not ready)
                         try {
                             // LogIn (REGISTER) as soon as the stack finish starting
-                            console.log("reg")
                             oSipSessionRegister = this.newSession('register', {
                                 expires: 200,
                                 events_listener: { events: '*', listener: onSipEventSession },
@@ -789,7 +786,6 @@
                         oSipStack = null;
                         oSipSessionRegister = null;
                         oSipSessionCall = null;
-                        console.log("q1")
                         uiOnConnectionEvent(false, false);
 
                         stopRingbackTone();
@@ -856,7 +852,6 @@
                     {
                         var bConnected = (e.type == 'connected');
                         if (e.session == oSipSessionRegister) {
-                            console.log("q1")
                             uiOnConnectionEvent(bConnected, !bConnected);
                             txtRegStatus.innerHTML = "<i>" + e.description + "</i>";
                         }
@@ -890,7 +885,6 @@
                 case 'terminating': case 'terminated':
                     {
                         if (e.session == oSipSessionRegister) {
-                            console.log("q1")
                             uiOnConnectionEvent(false, false);
 
                             oSipSessionCall = null;

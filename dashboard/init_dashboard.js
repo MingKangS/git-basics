@@ -74,7 +74,6 @@ var sTransferNumber;
                 //var rinningApps = SIPml.getRunningApps();
                 //var _rinningApps = Base64.decode(rinningApps);
                 //tsk_utils_log_info(_rinningApps);
-                console.log(12341)
                 sipRegister()
             }
 
@@ -162,30 +161,32 @@ var sTransferNumber;
             
         }
 
+        // changes the html on the dashboard depending on whichever "state" it is in eg: "default", "incoming call", or " on a call"
         function changeState(callState) {
+            // takes a parameter as the "state" and changes html in the "top-bar" element accordingly
             const top = document.getElementById("top-bar");
-
             switch(callState) {
                 case "on a call":
-                    top.innerHTML = '<input type="range" min="1" max="100" value="50" class="slider" id="mic-volume"><h2 id="h2">+601123456789 is on the line <b>1:23</b></h2><input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /><input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick="sipToggleHoldResume();" /><input type="button" id="btnHangUp" class="btn btn-primary hang-up" value="Hang up" onclick="sipHangUp();" disabled />'
+                    top.innerHTML = '<input type="range" min="1" max="100" value="50" class="slider" id="mic-volume"><h2 id="h2">+601123456789 is on the line <b>1:23</b></h2><input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /><input type="button" class="btn" style="" id="btnHoldResume" value="Hold" onclick="sipToggleHoldResume();" /><input type="button" id="btnHangUp" class="btn btn-primary hang-up" value="Hang up" onclick="sipHangUp();" disabled />';
                     
                     break;
                 case "incoming call":
-                    top.innerHTML = '<h2 id="h2"> is calling in... </h2><button id="btnCall" class="accept" ></button><button id="btnHangUp" class="btn btn-primary reject" value="Hang up" onclick="sipHangUp();" disabled></button>'
+                    top.innerHTML = '<h2 id="h2"> is calling in... </h2><button id="btnCall" class="accept" ></button><button id="btnHangUp" class="btn btn-primary reject" value="Hang up" onclick="sipHangUp();" disabled></button>';
                     break;
                 default:
-                    top.innerHTML = '<input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" /><div id="divBtnCallGroup" class="btn-group"><button id="btnCall" disabled class="btn btn-primary btnCall" onclick="sipCall(\'call-audio\');">Call</button><div id="divCallOptions" class="call-options" style="opacity: 1; margin-top: 0px"></div></div>&nbsp;&nbsp;<div id="divCallOptions" class="call-options" style="opacity: 0; margin-top: 0px"><input type="button" class="btn" style="" id="btnFullScreen" value="FullScreen" disabled onclick="toggleFullScreen();" /> &nbsp;<input type="button" class="btn" style="" id="btnMute" value="Mute" onclick="sipToggleMute();" /> &nbsp; &nbsp;<input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /> &nbsp;<input type="button" class="btn" style="" id="btnKeyPad" value="KeyPad" onclick="openKeyPad();" /></div><label style="width: 100%;" align="center" id="txtCallStatus"></label>'
+                    top.innerHTML = '<input type="text" style="width: 100%; height:100%;" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" /><div id="divBtnCallGroup" class="btn-group"><button id="btnCall" disabled class="btn btn-primary btnCall" onclick="sipCall(\'call-audio\');">Call</button><div id="divCallOptions" class="call-options" style="opacity: 1; margin-top: 0px"></div></div>&nbsp;&nbsp;<div id="divCallOptions" class="call-options" style="opacity: 0; margin-top: 0px"><input type="button" class="btn" style="" id="btnFullScreen" value="FullScreen" disabled onclick="toggleFullScreen();" /> &nbsp;<input type="button" class="btn" style="" id="btnMute" value="Mute" onclick="sipToggleMute();" /> &nbsp; &nbsp;<input type="button" class="btn" style="" id="btnTransfer" value="Transfer" onclick="sipTransfer();" /> &nbsp;<input type="button" class="btn" style="" id="btnKeyPad" value="KeyPad" onclick="openKeyPad();" /></div><label style="width: 100%;" align="center" id="txtCallStatus"></label>';
               }
-              console.log(document.getElementById("btnCall"), document.getElementById("btnHangUp"),1)
-              btnCall = document.getElementById("btnCall")
-              btnHangUp = document.getElementById("btnHangUp")
-              btnHoldResume = document.getElementById("btnHoldResume")
-              console.log(btnCall, btnHangUp, 1)
+              
+              // define all the button elements
+              btnCall = document.getElementById("btnCall");
+              btnHangUp = document.getElementById("btnHangUp");
+              btnHoldResume = document.getElementById("btnHoldResume");
+              
               if (btnCall) {
-                  btnCall.disabled = false
+                  btnCall.disabled = false;
               }
               if (btnHangUp) {
-                btnHangUp.disabled = false
+                btnHangUp.disabled = false;
             }
         }
 
@@ -296,18 +297,14 @@ var sTransferNumber;
             try {
                 const txtPrivateIdentity = window.localStorage.getItem('org.doubango.identity.impi');
                 const txtPassword = window.localStorage.getItem('org.doubango.identity.password');
-                console.log(1)
                 //btnRegister.disabled = true;
-                console.log(txtPrivateIdentity)
                 if (!txtPrivateIdentity) {
                     //txtRegStatus.innerHTML = '<b>Please fill madatory fields (*)</b>';
                     //btnRegister.disabled = false;
                     return;
                 }
-                console.log(2)
                 
                 var o_impu = tsip_uri.prototype.Parse("sip:" + txtPrivateIdentity + "@" + "192.168.8.15");
-                console.log(o_impu)
                 if (!o_impu || !o_impu.s_user_name || !o_impu.s_host) {
                     //txtRegStatus.innerHTML = "<b>[" + "sip:" + txtPrivateIdentity.value + "@" + "192.168.8.15" + "] is not a valid Public identity</b>";
                     //btnRegister.disabled = false;
@@ -318,10 +315,9 @@ var sTransferNumber;
                 if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
                     window.webkitNotifications.requestPermission();
                 }
-                console.log(3)
+
                 // save credentials
                 //saveCredentials();
-                console.log(2)
                 // update debug level to be sure new values will be used if the user haven't updated the page
                 SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') == "true") ? "error" : "info");
 
@@ -350,19 +346,15 @@ var sTransferNumber;
                 }
                 
                 );
-                console.log(oSipStack)
                 if (oSipStack.start() != 0) {
-                    console.log("sip start fail")
                     //txtRegStatus.innerHTML = '<b>Failed to start the SIP stack</b>';
                 }
                 else {
-                    console.log("yay")
                     return;
                 }
             }
             catch (e) {
                 //txtRegStatus.innerHTML = "<b>2:" + e + "</b>";
-                console.log("e")
             }
             //btnRegister.disabled = false;
         }
@@ -376,17 +368,10 @@ var sTransferNumber;
 
         // makes a call (SIP INVITE)
         function sipCall(s_type) {
-            console.log("call func",oSipSessionCall)
-            
-            
-            //console.log(oSipStack,!oSipSessionCall,!tsk_string_is_null_or_empty(txtPhoneNumber.value))
-            
             if (oSipSessionCall) {
-                console.log("2")
                 txtCallStatus.innerHTML = '<i>Connecting...</i>';
                 oSipSessionCall.accept(oConfigCall);
             }else if (oSipStack && !oSipSessionCall && !tsk_string_is_null_or_empty(txtPhoneNumber.value)) {
-                console.log("1")
                 if (s_type == 'call-screenshare') {
                     if (!SIPml.isScreenShareSupported()) {
                         alert('Screen sharing not supported. Are you using chrome 26+?');
@@ -411,7 +396,6 @@ var sTransferNumber;
                 // create call session
                 oSipSessionCall = oSipStack.newSession(s_type, oConfigCall);
                 // make call
-                console.log(txtPhoneNumber.value)
                 //txtPhoneNumber.value = 110196
                 const phoneNumber = txtPhoneNumber.value
                 changeState("on a call")
@@ -425,7 +409,6 @@ var sTransferNumber;
                 } 
                 saveCallOptions();
             }
-            console.log("call func end")
         }
 
         // Share entire desktop aor application using BFCP or WebRTC native implementation
@@ -463,7 +446,6 @@ var sTransferNumber;
         function sipTransfer() {
             if (oSipSessionCall) {
                 var s_destination = prompt('Enter destination number', '');
-                console.log("---------trans ",s_destination)
                 if (!tsk_string_is_null_or_empty(s_destination)) {
                     btnTransfer.disabled = true;
                     if (oSipSessionCall.transfer(s_destination) != 0) {
@@ -472,8 +454,7 @@ var sTransferNumber;
                         return;
                     }
                     txtCallStatus.innerHTML = '<i>Transfering the call...</i>';
-                    oSipSessionCall = false
-                    console.log("osipsessioncall = ", oSipSessionCall)
+                    oSipSessionCall = false;
                 }
             }
         }
@@ -484,9 +465,7 @@ var sTransferNumber;
                 var i_ret;
                 btnHoldResume.disabled = true;
                 txtCallStatus.innerHTML = oSipSessionCall.bHeld ? '<i>Resuming the call...</i>' : '<i>Holding the call...</i>';
-                console.log("toggle")
                 i_ret = oSipSessionCall.bHeld ? oSipSessionCall.resume() : oSipSessionCall.hold();
-                console.log(i_ret)
                 if (i_ret != 0) {
                     txtCallStatus.innerHTML = '<i>Hold / Resume failed</i>';
                     btnHoldResume.disabled = false;
@@ -514,7 +493,6 @@ var sTransferNumber;
         // terminates the call (SIP BYE or CANCEL)
         function sipHangUp() {
             if (oSipSessionCall) {
-                console.log("hangup")
                 //txtCallStatus.innerHTML = '<i>Terminating the call...</i>';
                 oSipSessionCall.hangup({ events_listener: { events: '*', listener: onSipEventSession } });
             }
@@ -765,7 +743,6 @@ var sTransferNumber;
                         oSipStack = null;
                         oSipSessionRegister = null;
                         oSipSessionCall = null;
-                        console.log("q1")
                         uiOnConnectionEvent(false, false);
 
                         stopRingbackTone();
@@ -788,7 +765,6 @@ var sTransferNumber;
                         else {
                             
 
-                            console.log("change state i call")
                             changeState("incoming call");
                             oSipSessionCall = e.newSession;
                             // start listening for events
@@ -833,19 +809,22 @@ var sTransferNumber;
                 case 'starting': default: break;
             }
         };
+
+        // increments the time by one second
         async function timeKeeper() {
-            const b = document.getElementById("b")
-            var time = b.innerHTML
-            var min = parseInt(time.slice(0,-3))
-            var sec = time.slice(-2,-1) == "0" ? parseInt(time.slice(-1)) : parseInt(time.slice(-2))
-            sec += 1
+            const b = document.getElementById("b");
+            var time = b.innerHTML;
+            var min = parseInt(time.slice(0,-3));
+            var sec = time.slice(-2,-1) == "0" ? parseInt(time.slice(-1)) : parseInt(time.slice(-2));
+
+            // formats the displyed time
+            sec += 1;
             if (sec == 60) {
-                min += 1
-                sec = 0
+                min += 1;
+                sec = 0;
             }
-            sec = sec < 10 ? "0" + sec.toString() : sec.toString()
-            b.innerHTML = min.toString() + ":" + sec
-            console.log(b,time,min,sec)
+            sec = sec < 10 ? "0" + sec.toString() : sec.toString();
+            b.innerHTML = min.toString() + ":" + sec;
         }
 
         // Callback function for SIP sessions (INVITE, REGISTER, MESSAGE...)
@@ -857,18 +836,17 @@ var sTransferNumber;
                     {
                         var bConnected = (e.type == 'connected');
                         if (e.session == oSipSessionRegister) {
-                            console.log("q2")
                             uiOnConnectionEvent(bConnected, !bConnected);
                             txtRegStatus.innerHTML = "<i>" + e.description + "</i>";
                         }
                         else if (e.session == oSipSessionCall) {
-                            console.log("case: connected", e.type)
-                            changeState("on a call")
+                            changeState("on a call");
                             var sRemoteNumber = (oSipSessionCall.getRemoteFriendlyName() || 'unknown');
-                            const h2 = document.getElementById("h2")
-                            h2.innerHTML = sRemoteNumber + ' is on the line <b id="b">0:00</b>'
+                            const h2 = document.getElementById("h2");
+                            h2.innerHTML = sRemoteNumber + ' is on the line <b id="b">0:00</b>';
+
+                            // sets interval to increment the displyed time and stores the function id in localStorage so it can be terminated later
                             window.localStorage.setItem('timer', setInterval(function () { timeKeeper() },1000));
-                            //var timer = setInterval(function () { timeKeeper() },1000)
                             btnHangUp.value = 'Hang up';
                             //btnCall.disabled = true;
                             btnHangUp.disabled = false;
@@ -897,13 +875,11 @@ var sTransferNumber;
                     } // 'connecting' | 'connected'
                 case 'terminating': case 'terminated':
                     {   
-                        console.log("_________clear")
+
+                        // stops the timekeeper
                         clearInterval(window.localStorage.getItem('timer'));
-                        console.log(oSipStack)
                         changeState("")
-                        console.log("case: terminated", oSipStack)
                         if (e.session == oSipSessionRegister) {
-                            console.log("q3")
                             uiOnConnectionEvent(false, false);
 
                             oSipSessionCall = null;
@@ -1008,7 +984,6 @@ var sTransferNumber;
                     }
                 case 'm_local_resume_ok':
                     {
-                        console.log('m_local_resume_ok')
                         if (e.session == oSipSessionCall) {
                             oSipSessionCall.bTransfering = false;
                             btnHoldResume.value = 'Hold';
@@ -1025,7 +1000,6 @@ var sTransferNumber;
                     }
                 case 'm_local_resume_nok':
                     {
-                        console.log('m_local_resume_nnnnnok')
                         if (e.session == oSipSessionCall) {
                             oSipSessionCall.bTransfering = false;
                             btnHoldResume.disabled = false;

@@ -217,18 +217,14 @@ var sTransferNumber;
             // catch exception for IE (DOM not ready)
             try {
                 
-                console.log(1)
                 btnRegister.disabled = true;
-                console.log(txtPrivateIdentity)
                 if (!txtPrivateIdentity.value) {
                     txtRegStatus.innerHTML = '<b>Please fill madatory fields (*)</b>';
                     btnRegister.disabled = false;
                     return;
                 }
-                console.log(2)
                 
                 var o_impu = tsip_uri.prototype.Parse("sip:" + txtPrivateIdentity.value + "@" + "192.168.8.15");
-                console.log(o_impu)
                 if (!o_impu || !o_impu.s_user_name || !o_impu.s_host) {
                     txtRegStatus.innerHTML = "<b>[" + "sip:" + txtPrivateIdentity.value + "@" + "192.168.8.15" + "] is not a valid Public identity</b>";
                     btnRegister.disabled = false;
@@ -239,10 +235,8 @@ var sTransferNumber;
                 if (window.webkitNotifications && window.webkitNotifications.checkPermission() != 0) {
                     window.webkitNotifications.requestPermission();
                 }
-                console.log(3)
                 // save credentials
                 saveCredentials();
-                console.log(2)
                 // update debug level to be sure new values will be used if the user haven't updated the page
                 SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') == "true") ? "error" : "info");
 
@@ -271,19 +265,15 @@ var sTransferNumber;
                 }
                 
                 );
-                console.log(oSipStack)
                 if (oSipStack.start() != 0) {
-                    console.log("sip start fail")
                     txtRegStatus.innerHTML = '<b>Failed to start the SIP stack</b>';
                 }
                 else {
-                    console.log("yay")
                     return;
                 }
             }
             catch (e) {
                 txtRegStatus.innerHTML = "<b>2:" + e + "</b>";
-                console.log("e")
             }
             btnRegister.disabled = false;
         }
@@ -534,7 +524,6 @@ var sTransferNumber;
         function uiOnConnectionEvent(b_connected, b_connecting) { // should be enum: connecting, connected, terminating, terminated
             btnRegister.disabled = b_connected || b_connecting;
             btnUnRegister.disabled = !b_connected && !b_connecting;
-            console.log(b_connected, b_connecting,btnRegister.disabled,btnUnRegister.disabled)
             // btnCall.disabled = !(b_connected && tsk_utils_have_webrtc() && tsk_utils_have_stream());
             // btnHangUp.disabled = !oSipSessionCall;
         }
@@ -666,7 +655,6 @@ var sTransferNumber;
                         oSipStack = null;
                         oSipSessionRegister = null;
                         oSipSessionCall = null;
-                        console.log(1)
                         uiOnConnectionEvent(false, false);
 
                         stopRingbackTone();
@@ -733,9 +721,7 @@ var sTransferNumber;
                     {
                         var bConnected = (e.type == 'connected');
                         if (e.session == oSipSessionRegister) {
-                            console.log(22)
                             uiOnConnectionEvent(bConnected, !bConnected);
-                            console.log(3)
                             txtRegStatus.innerHTML = "<b>" + e.description + "</b>";
                             location.replace("./dashboard.htm")
                         }
@@ -769,7 +755,6 @@ var sTransferNumber;
                 case 'terminating': case 'terminated':
                     {
                         if (e.session == oSipSessionRegister) {
-                            console.log(3)
                             uiOnConnectionEvent(false, false);
 
                             oSipSessionCall = null;

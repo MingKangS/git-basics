@@ -12,7 +12,6 @@ async function triggerNotification1(message) {
 }
 
 const trigger_button = document.getElementById("trigger_button");
-console.log(trigger_button)
 trigger_button.addEventListener("click",() => {triggerNotification1("test")});
 
 
@@ -39,10 +38,8 @@ async function triggerNotification(message) {
 
     // toSkipAppend >= 1 means this message has already been appended to queue so skip this message
     if (toSkipAppend >= 1) {
-        console.log(1);
         toSkipAppend -= 1;
     } else {
-        console.log(2);
         appendToQueue(message);
         currentMessage.innerHTML = "";
     }
